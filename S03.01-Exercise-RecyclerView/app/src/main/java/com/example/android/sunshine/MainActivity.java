@@ -25,6 +25,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.android.sunshine.data.SunshinePreferences;
 import com.example.android.sunshine.utilities.NetworkUtils;
 import com.example.android.sunshine.utilities.OpenWeatherJsonUtils;
@@ -85,10 +88,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     // TODO (33) Delete mWeatherTextView
-    private TextView mWeatherTextView;
+
 
     // TODO (34) Add a private RecyclerView variable called mRecyclerView
     // TODO (35) Add a private ForecastAdapter variable called mForecastAdapter
+    private RecyclerView mRecyclerView;
+    private ForecastAdapter mForecastAdapter;
 
     private TextView mErrorMessageDisplay;
 
@@ -104,23 +109,23 @@ public class MainActivity extends AppCompatActivity {
          * Using findViewById, we get a reference to our TextView from xml. This allows us to
          * do things like set the text of the TextView.
          */
-        mWeatherTextView = (TextView) findViewById(R.id.tv_weather_data);
+
 
         // TODO (37) Use findViewById to get a reference to the RecyclerView
-
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_forecast);
         /* This TextView is used to display errors and will be hidden if there are no errors */
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
         // TODO (38) Create layoutManager, a LinearLayoutManager with VERTICAL orientation and shouldReverseLayout == false
-
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         // TODO (39) Set the layoutManager on mRecyclerView
-
+        mRecyclerView.setLayoutManager(layoutManager);
         // TODO (40) Use setHasFixedSize(true) on mRecyclerView to designate that all items in the list will have the same size
-
+        mRecyclerView.setHasFixedSize(true);
         // TODO (41) set mForecastAdapter equal to a new ForecastAdapter
-
+        mForecastAdapter = new ForecastAdapter();
         // TODO (42) Use mRecyclerView.setAdapter and pass in mForecastAdapter
-
+        mRecyclerView.setAdapter(mForecastAdapter);
         /*
          * The ProgressBar that will indicate to the user that we are loading data. It will be
          * hidden when no data is loading.
@@ -157,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         // TODO (43) Show mRecyclerView, not mWeatherTextView
         /* Then, make sure the weather data is visible */
-        mWeatherTextView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -170,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
     private void showErrorMessage() {
         // TODO (44) Hide mRecyclerView, not mWeatherTextView
         /* First, hide the currently visible data */
-        mWeatherTextView.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
         /* Then, show the error */
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
@@ -220,9 +225,7 @@ public class MainActivity extends AppCompatActivity {
                  * the "\n\n\n" after the String is to give visual separation between each String in the
                  * TextView. Later, we'll learn about a better way to display lists of data.
                  */
-                for (String weatherString : weatherData) {
-                    mWeatherTextView.append((weatherString) + "\n\n\n");
-                }
+                mForecastAdapter.setMweatherData(weatherData);
             } else {
                 showErrorMessage();
             }
@@ -245,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_refresh) {
             // TODO (46) Instead of setting the text to "", set the adapter to null before refreshing
-            mWeatherTextView.setText("");
+           mForecastAdapter.setMweatherData(null);
             loadWeatherData();
             return true;
         }
