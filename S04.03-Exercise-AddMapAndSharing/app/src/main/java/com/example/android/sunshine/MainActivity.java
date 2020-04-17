@@ -210,6 +210,15 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
         /* Return true so that the menu is displayed in the Toolbar */
         return true;
     }
+private void OpenLocationInMap(){
+        String Address = "Japan";
+        Uri geolocation = Uri.parse("geo:0,0?q=" + Address);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geolocation);
+        if(intent.resolveActivity(getPackageManager())!=null){
+            startActivity(intent);
+        }
+}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -222,6 +231,9 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
         }
 
         // TODO (2) Launch the map when the map menu item is clicked
+        if(id==R.id.action_openMap){
+            OpenLocationInMap();
+        }
 
         return super.onOptionsItemSelected(item);
     }
