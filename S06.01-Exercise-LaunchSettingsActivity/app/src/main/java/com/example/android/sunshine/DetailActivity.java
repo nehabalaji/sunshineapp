@@ -56,4 +56,15 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     // TODO (7) Launch SettingsActivity when the Settings option is clicked
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_settings){
+            Intent StartSettingsActivity = new Intent(this, SettingsActivity.class);
+            startActivity(StartSettingsActivity);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
